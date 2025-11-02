@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-10 mx-auto">
+    <h1 class="my-4">Отчёт по страницам</h1>
+    <div class="mb-3">
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('visit_logs_pages_csv') }}">Экспорт в CSV</a>
+      <a class="btn btn-sm btn-secondary ms-2" href="{{ url_for('visit_logs') }}">Назад к журналу</a>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th scope="col">№</th>
+            <th scope="col">Страница</th>
+            <th scope="col">Количество посещений</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if items %}
+            {% for r in items %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td><code>{{ r.path }}</code></td>
+                <td>{{ r.cnt }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="3" class="text-center text-muted">Нет данных.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

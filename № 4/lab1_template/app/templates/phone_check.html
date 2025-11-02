@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6 col-lg-5 mx-auto">
+    <h1 class="my-4">Проверка телефона</h1>
+
+    {% if normalized %}
+      <div class="alert alert-success">Успешно: {{ normalized }}</div>
+    {% endif %}
+
+    <div class="card">
+      <div class="card-body">
+        <form method="post" action="{{ url_for('phone_check') }}" novalidate>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Номер телефона</label>
+            <input
+              type="text"
+              class="form-control{% if error %} is-invalid{% endif %}"
+              id="phone"
+              name="phone"
+              placeholder="Например: +7 (123) 456-75-90"
+              value="{{ value }}"
+              required
+            >
+            {% if error %}
+              <div class="invalid-feedback">{{ error }}</div>
+            {% else %}
+              <div class="form-text">Допустимы цифры, пробелы, скобки (), дефисы -, точки ., плюс +</div>
+            {% endif %}
+          </div>
+          <button type="submit" class="btn btn-primary">Проверить</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="mt-3 small text-muted">
+      Примеры: +7 (123) 456-75-90 · 8(123)4567590 · 123.456.75.90
+    </div>
+  </div>
+</div>
+{% endblock %}
+

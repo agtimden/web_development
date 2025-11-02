@@ -1,0 +1,83 @@
+# Импорт необходимых библиотек
+import random
+from flask import Flask, render_template
+from faker import Faker
+
+# Создание экземпляра Faker для генерации тестовых данных
+fake = Faker()
+
+# Создание Flask приложения
+app = Flask(__name__)
+application = app  # Для совместимости с WSGI серверами
+
+# Список ID изображений для постов (соответствуют файлам в папке static/images/)
+images_ids = ['7d4e9175-95ea-4c5f-8be5-92a6b708bb3c',
+              '2d2ab7df-cdbc-48a8-a936-35bba702def5',
+              '6e12f3de-d5fd-4ebb-855b-8cbc485278b7',
+              'afc2cfe7-5cac-4b80-9b9a-d5c65ef0c728',
+              'cab5b7f2-774e-4884-a200-0c0180fa777f']
+
+# Генерация комментариев
+def generate_comments(replies=True):
+    """
+    Генерирует случайные комментарии для постов
+    Args:
+        replies (bool): Если True, генерирует ответы на комментарии
+    Returns:
+        list: Список комментариев с автором, текстом и датой
+    """
+    comments = []
+    for i in range(random.randint(1, 3)):
+        comment = { 
+            'author': fake.name(), 
+            'text': fake.text(),
+            'date': fake.date_time_between(start_date='-1y', end_date='now')
+        }
+        if replies:
+            comment['replies'] = generate_comments(replies=False)
+        comments.append(comment)
+    return comments
+
+
+# Генерация постов
+def generate_post(i):
+    """
+    Генерирует один пост с случайными данными
+    Args:
+        i (int): Индекс поста (используется для выбора изображения)
+    Returns:
+        dict: Словарь с данными поста
+    """
+    return {
+        'title': 'Заголовок поста',
+        'text': fake.paragraph(nb_sentences=100),
+        'author': fake.name(),
+        'date': fake.date_time_between(start_date='-2y', end_date='now'),
+        'image_id': f'{images_ids[i]}.jpg',
+        'comments': generate_comments()
+    }
+
+# Генерация списка постов и сортировка по дате (новые сверху)
+posts_list = sorted([generate_post(i) for i in range(5)], key=lambda p: p['date'], reverse=True)
+
+# Маршруты Flask приложения
+@app.route('/')
+def index():
+    """Главная страница с заданием лабораторной работы"""
+    return render_template('index.html')
+
+@app.route('/posts')
+def posts():
+    """Страница со списком всех постов"""
+    return render_template('posts.html', title='Посты', posts=posts_list)
+
+@app.route('/posts/<int:index>')
+def post(index):
+    """Страница отдельного поста по индексу"""
+    p = posts_list[index]
+    return render_template('post.html', title=p['title'], post=p)
+
+@app.route('/about')
+def about():
+    """Страница об авторе"""
+    return render_template('about.html', title='Об авторе')

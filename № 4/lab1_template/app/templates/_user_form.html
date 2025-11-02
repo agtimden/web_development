@@ -1,0 +1,42 @@
+{% macro user_form(form, roles, mode, errors) %}
+  <div class="row g-3">
+    {% if mode == 'create' %}
+      <div class="col-md-6">
+        <label for="username" class="form-label">Логин</label>
+        <input type="text" class="form-control{% if errors.username %} is-invalid{% endif %}" id="username" name="username" value="{{ form.username }}" required>
+        {% if errors.username %}<div class="invalid-feedback">{{ errors.username }}</div>{% endif %}
+      </div>
+      <div class="col-md-6">
+        <label for="password" class="form-label">Пароль</label>
+        <input type="password" class="form-control{% if errors.password %} is-invalid{% endif %}" id="password" name="password" value="{{ form.password }}" required>
+        {% if errors.password %}<div class="invalid-feedback">{{ errors.password }}</div>{% endif %}
+      </div>
+    {% endif %}
+
+    <div class="col-md-4">
+      <label for="last_name" class="form-label">Фамилия</label>
+      <input type="text" class="form-control{% if errors.last_name %} is-invalid{% endif %}" id="last_name" name="last_name" value="{{ form.last_name }}">
+      {% if errors.last_name %}<div class="invalid-feedback">{{ errors.last_name }}</div>{% endif %}
+    </div>
+    <div class="col-md-4">
+      <label for="first_name" class="form-label">Имя</label>
+      <input type="text" class="form-control{% if errors.first_name %} is-invalid{% endif %}" id="first_name" name="first_name" value="{{ form.first_name }}">
+      {% if errors.first_name %}<div class="invalid-feedback">{{ errors.first_name }}</div>{% endif %}
+    </div>
+    <div class="col-md-4">
+      <label for="middle_name" class="form-label">Отчество</label>
+      <input type="text" class="form-control" id="middle_name" name="middle_name" value="{{ form.middle_name }}">
+    </div>
+    <div class="col-md-6">
+      <label for="role_id" class="form-label">Роль</label>
+      <select class="form-select" id="role_id" name="role_id">
+        <option value="">— нет роли —</option>
+        {% for r in roles %}
+          <option value="{{ r.id }}" {% if form.role_id and form.role_id|int == r.id %}selected{% endif %}>{{ r.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+{% endmacro %}
+
+

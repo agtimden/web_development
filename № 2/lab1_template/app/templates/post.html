@@ -1,0 +1,88 @@
+{# Шаблон страницы отдельного поста #}
+{# Наследует базовый шаблон base.html #}
+{% extends 'base.html' %}
+
+{# Основной блок контента страницы #}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Заголовок поста -->
+        <h1 class="my-4">{{ post.title }}</h1>
+        
+        <!-- Автор и дата -->
+        <p class="text-muted mb-4">
+            <strong>{{ post.author }}</strong>, {{ post.date.strftime('%d.%m.%Y') }}
+        </p>
+        
+        <!-- Изображение поста -->
+        <img class="img-fluid rounded mb-4" src="{{ url_for('static', filename='images/' + post.image_id) }}" alt="{{ post.title }}">
+        
+        <!-- Текст поста -->
+        <div class="post-content mb-5">
+            {{ post.text | replace('\n', '<br>') | safe }}
+        </div>
+        
+        <!-- Форма комментариев -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Оставьте комментарий</h5>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <textarea class="form-control" rows="4" placeholder="Введите ваш комментарий..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Комментарии -->
+        <div class="comments-section">
+            <h5 class="mb-4">Комментарии</h5>
+            
+            {% for comment in post.comments %}
+                <!-- Основной комментарий -->
+                <div class="d-flex mb-4">
+                    <div class="flex-shrink-0">
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="text-white small">{{ comment.author[0] }}</span>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-1">
+                            {{ comment.author }} 
+                            <small class="text-muted">
+                                <i>{{ comment.date.strftime('Posted on %B %d, %Y') if comment.date else 'Posted recently' }}</i>
+                            </small>
+                        </h6>
+                        <p class="mb-2">{{ comment.text }}</p>
+                        
+                        <!-- Ответы на комментарий -->
+                        {% if comment.replies %}
+                            {% for reply in comment.replies %}
+                                <div class="d-flex mt-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            <span class="text-white small">{{ reply.author[0] }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1 small">
+                                            {{ reply.author }} 
+                                            <small class="text-muted">
+                                                <i>{{ reply.date.strftime('Posted on %B %d, %Y') if reply.date else 'Posted recently' }}</i>
+                                            </small>
+                                        </h6>
+                                        <p class="mb-0 small">{{ reply.text }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

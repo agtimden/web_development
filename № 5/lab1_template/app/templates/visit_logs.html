@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-10 mx-auto">
+    <h1 class="my-4">Журнал посещений</h1>
+    <div class="mb-3">
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('visit_logs_pages') }}">Отчёт по страницам</a>
+      <a class="btn btn-outline-secondary btn-sm ms-2" href="{{ url_for('visit_logs_users') }}">Отчёт по пользователям</a>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th scope="col">№</th>
+            <th scope="col">Пользователь</th>
+            <th scope="col">Страница</th>
+            <th scope="col">Дата</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if logs %}
+            {% for r in logs %}
+              <tr>
+                <td>{{ loop.index0 + (start_index or 1) }}</td>
+                <td>{{ r.fio }}</td>
+                <td><code>{{ r.path }}</code></td>
+                <td>{{ r.created_at.strftime('%d.%m.%Y %H:%M:%S') }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="4" class="text-center text-muted">Записей нет.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    <nav aria-label="Pagination">
+      <ul class="pagination">
+        <li class="page-item{% if not has_prev %} disabled{% endif %}">
+          <a class="page-link" href="{{ url_for('visit_logs', page=page-1) }}" tabindex="-1">Предыдущая</a>
+        </li>
+        <li class="page-item disabled"><span class="page-link">Стр. {{ page }}</span></li>
+        <li class="page-item{% if not has_next %} disabled{% endif %}">
+          <a class="page-link" href="{{ url_for('visit_logs', page=page+1) }}">Следующая</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}
