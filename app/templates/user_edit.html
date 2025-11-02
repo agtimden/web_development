@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% from '_user_form.html' import user_form with context %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-8 mx-auto">
+    <h1 class="my-4">Редактирование пользователя</h1>
+
+    <div class="card">
+      <div class="card-body">
+        <form method="post" action="{{ url_for('user_edit', user_id=user.id) }}" novalidate>
+          {{ user_form(form, roles, 'edit', errors or {}) }}
+          <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary ms-2">Отмена</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

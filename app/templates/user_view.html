@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+# ----- Шаблон страницы просмотра пользователя -----
+{% block content %}
+<div class="row">
+  <div class="col-lg-8 mx-auto">
+    <h1 class="my-4">Просмотр пользователя</h1>
+
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <tbody>
+          <tr>
+            <th style="width: 30%">Идентификатор</th>
+            <td>{{ user.id }}</td>
+          </tr>
+          <tr>
+            <th>Логин</th>
+            <td>{{ user.username }}</td>
+          </tr>
+          <tr>
+            <th>Фамилия</th>
+            <td>{{ user.last_name or '—' }}</td>
+          </tr>
+          <tr>
+            <th>Имя</th>
+            <td>{{ user.first_name or '—' }}</td>
+          </tr>
+          <tr>
+            <th>Отчество</th>
+            <td>{{ user.middle_name or '—' }}</td>
+          </tr>
+          <tr>
+            <th>Роль</th>
+            <td>{{ user.role_name or '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Назад к списку</a>
+  </div>
+</div>
+{% endblock %}
+
